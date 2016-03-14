@@ -57,4 +57,14 @@ router.put('/:id', function(req, res) {
     });
 });
 
+router.delete('/:id', function(req, res) {
+    User.remove({ _id: req.params.id }, function(err) {
+        if (err) {
+            res.json({err});
+            return;
+        }
+        res.json("Usuario eliminado");
+    });
+});
+
 module.exports = router;

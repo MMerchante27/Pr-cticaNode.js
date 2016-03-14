@@ -26,44 +26,6 @@ router.get('/form', function(req, res, next) {
 
 });
 
-router.post('/', function(req, res) {
-    // Instanciamos objeto en memoria
-    var user = new User(req.body);
-    // Lo guardamos en la BD
-    user.save(function(err, newRow) {
-        if (err) {
-            res.json({ result: false, err: err });
-            return;
-        }
-        res.json({ result: true, row: newRow });
-    });
-});
 
-//Actualizar un user
-
-router.put('/:id', function(req, res) {
-    //Para actualizar varios hay que usar en options
-    var options = {};
-    // var options = {multi:true}; Para actualizar varios usar multi
-    User.update({ _id: req.params.id }, { $set: req.body }, options, function(err, data) {
-        if (err) {
-            res.json({ result: false, err: err });
-            return;
-        }
-
-        res.json({ result: true, row: data });
-
-    });
-});
-
-router.delete('/:id', function(req, res) {
-    User.remove({ _id: req.params.id }, function(err) {
-        if (err) {
-            res.json({ err: err });
-            return;
-        }
-
-    });
-});
 
 module.exports = router;
