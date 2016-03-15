@@ -15,12 +15,13 @@ var anuncioSchema = mongoose.Schema({
 });
 
 // Método estático
-anuncioSchema.statics.list = function(sort, cb) {
+anuncioSchema.statics.list = function(filters,sort,cb) {
     // preparamos la query sin ejecutar ( no ponemos callback a find)
-    var query = Anuncio.find({});
+    var query = Anuncio.find(filters);  //Añadir filters
 
     //añadimos más parámetros a la query
     query.sort(sort);
+    console.log('filtros: ', filters);
 
     //La ejecutamos
     query.exec(function(err, rows) {
