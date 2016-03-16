@@ -33,23 +33,36 @@ router.post('/', function(req, res, next) {
     var nombre = req.body.nombre;
     var email = req.body.email;
     var password = req.body.clave;
-    var sha256 = crypto.createHash("sha256");
-    sha256.update(password, "utf8"); //utf8 here
-    var result = sha256.digest("base64");
-    console.log(result);
-    var user = new User({ nombre: nombre, email: email, clave: result });
-    user.save(function(err, userCreado) {
+    let filter = {};
+    filter.nombre = nombre;
+    console.log(filter.nombre);
+
+    User.findOne(filter, function(err, row) {
         if (err) {
-            console.log("Error!" + err);
+            res.send('error', err);
             return;
         }
-        res.send('User creado.- \n' + "Nombre: "+userCreado.nombre+"\n" + "Email: "+ userCreado.email);
-        return;
+        if (!row) {
+            var sha256 = crypto.createHash("sha256");
+            sha256.update(password, "utf8"); //utf8 here
+            var result = sha256.digest("base64");
 
-        console.log('User creado: ' + userCreado);
+
+            var user = new User({ nombre: nombre, email: email, clave: result });
+            user.save(function(err, userCreado) {
+                if (err) {
+                    console.log("Error!" + err);
+                    return;
+                }
+                res.send('User creado.- \n' + "Nombre: " + userCreado.nombre + "\n" + "Email: " + userCreado.email);
+                return;
+
+                console.log('User creado: ' + userCreado);
+
+            });
+        } else res.send("Usuario ya registrado");
 
     });
-
 });
 
 
