@@ -11,6 +11,7 @@ router.get('/', function(req, res, next) {
     res.send('respond with a resource');
 });
 
+
 /* GET anuncios listing. */
 router.get('/form', function(req, res, next) {
     let filters = {};
@@ -19,7 +20,7 @@ router.get('/form', function(req, res, next) {
         var sort = req.query.sort || 'nombre';
     };
 
-    if(typeof req.query.venta !== undefined){
+    if (typeof req.query.venta !== undefined) {
         filters.venta = req.query.venta;
     }
 
@@ -31,7 +32,7 @@ router.get('/form', function(req, res, next) {
     // star limit sort includeTotal filters
 
     var Anuncio = mongoose.model('Anuncio');
-    Anuncio.list(filters,sort, function(err, rows) {
+    Anuncio.list(filters, sort, function(err, rows) {
         if (err) {
             res.send('error', err);
             return;

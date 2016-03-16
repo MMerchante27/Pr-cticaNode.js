@@ -8,6 +8,28 @@ var Anuncio = mongoose.model('Anuncio');
 var auth = require('../../../lib/auth');
 router.use(auth());
 
+router.get('/tags', function(req, res, next) {
+    let filters = {};
+    if (req.query.sort !== undefined) {
+        var sort = req.query.sort || 'nombre';
+    };
+    Anuncio.list(filters, sort, '0', '0', function(err, rows) {
+        if (err) {
+            res.send('error', err);
+            return;
+        }
+        let allTags = [];
+        console.log(rows.length);
+        for (var i = 0; i < rows.length; i++) {
+
+            allTags = allTags.concat(rows[i].tags.filter(function(item) {
+                return allTags.indexOf(item) < 0;
+            }));
+
+        };
+        return res.json({ tags: allTags });
+    })
+});
 
 /* GET anuncios listing. */
 router.get('/', function(req, res, next) {
@@ -29,49 +51,64 @@ router.get('/', function(req, res, next) {
     if (req.query.nombre !== undefined) {
         filters.nombre = new RegExp('^' + req.query.nombre, "i");
     }
-
+    console.log(req.query.precio)
     if (req.query.precio !== undefined) {
-        if (req.query.precio.match(/^-[0-9]$/)) {
+        if ((/^(-){1}[0-9]+/).test(req.query.precio)) {
             precio.$lte = req.query.precio.substr(1);
 
-        } else if (req.query.precio.match(/^[0-9]-$/)) {
-
+        } else if ((/^[0-9]+(-){1}$/).test(req.query.precio)) {
             precio.$gte = req.query.precio.substr(0, req.query.precio.length - 1);
 
-        } else if (req.query.precio.match(/^[0-9]+$/)) {
+        } else if ((/^[0-9]+$/).test(req.query.precio)) {
             precio = req.query.precio;
 
-        } else if (req.query.precio.match(/[0-9]+(-){1}[0-9]+/)) {
-            console.log(req.query.precio.indexOf("-") - 1);
+        } else if ((/^[0-9]+(-){1}[0-9]+$/).test(req.query.precio)) {
             let subIzq = req.query.precio.substr(0, req.query.precio.indexOf("-"));
-            console.log(subIzq);
             precio.$gte = subIzq;
-            console.log("hola", precio.$gte);
             let subDer = req.query.precio.substr(req.query.precio.indexOf("-") + 1);
-            console.log(subDer);
             precio.$lte = subDer;
-            console.log(precio.$lte);
 
         }
         filters.precio = precio;
 
     }
 
+    let start = parseInt(req.query.start) || 0;
+    console.log(start);
+    let limit = parseInt(req.query.limit) || 0;
+    console.log(limit);
+
     // star limit sort includeTotal filters
 
-    var Anuncio = mongoose.model('Anuncio');
 
-    Anuncio.list(filters, sort, function(err, rows) {
+
+    Anuncio.list(filters, sort, start, limit, function(err, rows) {
         if (err) {
             res.send('error', err);
             return;
         }
         //cuando estén disponibles mando la vista
+
         res.render('anunciosForm', { anuncios: rows });
         return;
 
+
+
     });
 
+});
+
+router.post('/', function(req, res) {
+    // Instanciamos objeto en memoria
+    var anuncio = new Anuncio(req.body);
+    // Lo guardamos en la BD
+    anuncio.save(function(err, newRow) {
+        if (err) {
+            res.json({ result: false, err: err });
+            return;
+        }
+        res.json({ result: true, row: newRow });
+    });
 });
 
 module.exports = router;
