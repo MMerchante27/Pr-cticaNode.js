@@ -5,7 +5,6 @@ var mongoose = require('mongoose');
 require('../models/userModel');
 var crypto = require("crypto");
 var User = mongoose.model('User');
-
 var basicAuth = require('basic-auth');
 
 
@@ -18,6 +17,7 @@ var fn = function() {
             res.send(401);
             return;
         }
+
         var password = userRequest.pass;
         var sha256 = crypto.createHash("sha256");
         sha256.update(password, "utf8"); //utf8 here
@@ -25,15 +25,21 @@ var fn = function() {
 
         let filter = {};
         filter.nombre = userRequest.name;
-        User.list(filter, function(err, rows) {
+        User.findOne(filter, function(err, row) {
             if (err) {
                 res.send('error', err);
                 return;
             }
-            for (row in rows) {
-                row.clave = result;
+            if (row && row.clave === result) {
                 next();
+            } else {
+                res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+                res.send(401);
+                return;
             }
+
+
+
         })
     };
 };
