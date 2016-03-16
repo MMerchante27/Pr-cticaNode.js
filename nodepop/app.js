@@ -16,8 +16,8 @@ var users = require('./routes/users');
 // var admin = require('./routes/admin');
 
 // Rutas de API V1
- var apiAnuncios = require('./routes/api/v1/anuncios');
- var apiUsers = require('./routes/api/v1/users');
+var apiAnuncios = require('./routes/api/v1/anuncios');
+var apiUsers = require('./routes/api/v1/users');
 
 var app = express();
 
@@ -39,6 +39,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images/anuncios/',express.static(__dirname + '/public/images'));
 
 //Rutas de web
 app.use('/', routes);
@@ -47,8 +48,8 @@ app.use('/anuncios', anuncios);
 // app.use('/admin', admin);
 
 //Rutas de API V1
- app.use('/api/v1/anuncios', apiAnuncios);
- app.use('/api/v1/users', apiUsers);
+app.use('/api/v1/anuncios', apiAnuncios);
+app.use('/api/v1/users', apiUsers);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
