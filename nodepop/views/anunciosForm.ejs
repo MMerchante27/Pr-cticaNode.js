@@ -1,0 +1,19 @@
+<html>
+<head>
+</head>
+
+
+<body>
+	<h1>Anuncios</h1>
+	<% anuncios.forEach(function(anuncio){ %>
+		<div>
+		<p>Nombre: <%= anuncio.nombre %></p>
+		<p>Venta: <%= anuncio.venta %></p>
+		<p>Precio: <%= anuncio.precio %></p>
+		<p>Imagen: <%= anuncio.foto %></p>
+		<p>Tags: <%= anuncio.tags %></p>
+		</div>
+		<% }) %>
+</body>
+</html>
+
