@@ -108,7 +108,7 @@ router.post('/', function(req, res, next) {
                 res.send('User creado.- \n' + "Nombre: " + user.nombre + "\n" + "Email: " + user.email);
                 return;
 
-                console.log('User creado: ' + User);
+        
 
             });
         } else res.send("Usuario ya registrado");
@@ -195,7 +195,7 @@ router.put('/:id', function(req, res) {
 
         }
 
-    })
+    });
 
 });
 

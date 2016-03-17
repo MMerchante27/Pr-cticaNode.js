@@ -194,8 +194,8 @@ router.delete('/:id', function(req, res) {
 @api {update} /anuncios/:id Modificar anuncio existente.
  * @apiExample {curl} Example usage:
  *     curl -i http://http://localhost:3000/api/v1/anuncios/78dad778
- @apiVersion 1.0.0
 @apiPermission basicAuth
+@apiVersion 1.0.0
 @apiName UpdateAnuncios
 @apiGroup Anuncio
 
@@ -231,8 +231,8 @@ router.put('/:id', function(req, res) {
 @api {get} /anuncios/tags Obtener todos los tags existentes
  * @apiExample {curl} Example usage:
  *     curl -i http://http://localhost:3000/api/v1/anuncios/tags
- @apiVersion 1.0.0
 @apiPermission basicAuth
+@apiVersion 1.0.0
 @apiName GetTags
 @apiGroup Anuncio
 
@@ -271,9 +271,9 @@ router.get('/tags', function(req, res, next) {
                 return allTags.indexOf(item) < 0;
             }));
 
-        };
+        }
         return res.json({ tags: allTags });
-    })
+    });
 });
 
 
