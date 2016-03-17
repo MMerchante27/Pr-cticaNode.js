@@ -13,9 +13,9 @@ var userSchema = mongoose.Schema({
 });
 
 // Método estático
-userSchema.statics.list = function(filter, cb) {
+userSchema.statics.list = function(cb) {
     // preparamos la query sin ejecutar ( no ponemos callback a find)
-    var query = User.find(filter);
+    var query = User.find();
 
     //añadimos más parámetros a la query
 
