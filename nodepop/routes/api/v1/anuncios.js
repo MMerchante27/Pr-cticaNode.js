@@ -8,6 +8,8 @@ var Anuncio = mongoose.model('Anuncio');
 var auth = require('../../../lib/auth');
 router.use(auth());
 
+/*----------------------------Get tags-----------------------------------------*/
+
 router.get('/tags', function(req, res, next) {
     let filters = {};
     if (req.query.sort !== undefined) {
@@ -31,7 +33,7 @@ router.get('/tags', function(req, res, next) {
     })
 });
 
-/* GET anuncios listing. */
+/*----------------------------Get-----------------------------------------*/
 router.get('/', function(req, res, next) {
     let filters = {};
     let precio = {};
@@ -51,7 +53,6 @@ router.get('/', function(req, res, next) {
     if (req.query.nombre !== undefined) {
         filters.nombre = new RegExp('^' + req.query.nombre, "i");
     }
-    console.log(req.query.precio)
     if (req.query.precio !== undefined) {
         if ((/^(-){1}[0-9]+/).test(req.query.precio)) {
             precio.$lte = req.query.precio.substr(1);
@@ -98,6 +99,9 @@ router.get('/', function(req, res, next) {
 
 });
 
+/*----------------------------Post-----------------------------------------*/
+
+
 router.post('/', function(req, res) {
     // Instanciamos objeto en memoria
     var anuncio = new Anuncio(req.body);
@@ -110,5 +114,36 @@ router.post('/', function(req, res) {
         res.json({ result: true, row: newRow });
     });
 });
+
+
+/*----------------------------Delete-----------------------------------------*/
+router.delete('/:id', function(req, res) {
+    Anuncio.remove({ _id: req.params.id }, function(err) {
+        if (err) {
+            res.json({ err });
+            return;
+        }
+        res.json("Anuncio eliminado");
+    });
+});
+
+
+/*----------------------------Update-----------------------------------------*/
+
+router.put('/:id', function(req, res) {
+    //Para actualizar varios hay que usar en options
+    var options = {};
+    // var options = {multi:true}; Para actualizar varios usar multi
+    User.update({ _id: req.params.id }, { $set: req.body }, options, function(err, data) {
+        if (err) {
+            res.json({ result: false, err: err });
+            return;
+        }
+
+        res.json({ result: true, row: data });
+
+    });
+});
+
 
 module.exports = router;
