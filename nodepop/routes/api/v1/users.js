@@ -4,11 +4,11 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var crypto = require("crypto");
 var User = mongoose.model('User');
+var auth = require('../../../lib/auth');
 
 
 //Si queremos llevar la autenticación a otros módulos, sólo hace falta copiar las dos líneas siguientes
-var auth = require('../../../lib/auth');
-router.use(auth());
+
 
 
 /*----------------------------Get-----------------------------------------*/
@@ -46,7 +46,8 @@ router.use(auth());
  * @apiError UserNotFound Ha habido un error
 */
 
-router.get('/', function(req, res) {
+router.get('/', auth(), function(req, res) {
+
     User.list(function(err, rows) {
         if (err) {
             res.send("Ha habido un error", err);
@@ -169,7 +170,7 @@ router.delete('/:id', function(req, res) {
 */
 
 
-router.put('/:id', function(req, res) {
+router.put('/:id', auth(), function(req, res) {
     //Para actualizar varios hay que usar en options
     var options = {};
     // var options = {multi:true}; Para actualizar varios usar multi
