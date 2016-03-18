@@ -1,12 +1,12 @@
 {
 "users": [
 {
-"nombre": "Pepe",
+"nombre": "pepe",
 "email": "pepe@email.com",
 "clave": "pepecontraseña"
 },
 {
-"nombre": "Juan",
+"nombre": "juan",
 "email": "juan@email.com",
 "clave": "juancontraseña"
 }
